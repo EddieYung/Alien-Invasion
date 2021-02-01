@@ -8,13 +8,6 @@ class Shooter:
         self.screen = contra_shooter.screen
         self.screen_rect = contra_shooter.screen.get_rect()
         
-        #Moving Right flag
-        self.move_right = False
-        
-    def update_shooter(self):
-        if self.move_right:
-            self.rect.x += 1
-        
         #Load the image to the screen from it source
         self.image = pygame.image.load("/Users/edwardquarshie/Desktop/alien_invation/images/shooter.bmp")
         self.rect = self.image.get_rect()
@@ -22,6 +15,18 @@ class Shooter:
         #start the shooter at the left bottom of every new game
         self.rect.bottom = self.screen_rect.bottom
         
+        #Moving Right flag
+        self.move_right = False
+        self.move_left = False
+        
+    def update_shooter(self):
+        if self.move_right:
+            self.rect.x += 1
+            
+        if self.move_left:
+            self.rect.x -= 1
+        
+         
     def blitme(self):
         """Draws the shooter onto the screen"""
         self.screen.blit(self.image, self.rect)

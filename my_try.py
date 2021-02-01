@@ -30,13 +30,25 @@ class ContraGame():
             if event.type == pygame.QUIT:
                 sys.exit()
                 
+            #moves the character to right by setting a moving flag 
+            # to true   
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     self.shooter.move_right = True
                     
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT:
+                        self.shooter.move_left = True
+                        
+            #stops the movement of the character by setting a moving
+            #flag to false        
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_RIGHT:
                     self.shooter.move_right = False
+                    
+                elif event.type == pygame.KEYUP:
+                    if event.key == pygame.K_LEFT:
+                        self.shooter.move_left = False
                     
     def _update_visuals(self):        
         self.screen.fill(self.bg_colour)
