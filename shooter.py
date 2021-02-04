@@ -13,11 +13,12 @@ class Shooter:
         self.rect = self.image.get_rect()
         
         #start the shooter at the left bottom of every new game
-        self.rect.bottom = self.screen_rect.bottom
+        self.rect.left = self.screen_rect.left
         
         #Moving Right flag
         self.move_right = False
         self.move_left = False
+        self.jump = False
         
     def update_shooter(self):
         if self.move_right:
@@ -25,6 +26,9 @@ class Shooter:
             
         if self.move_left:
             self.rect.x -= 1
+        
+        if self.jump:
+            self.rect.y -= 10
         
          
     def blitme(self):
