@@ -3,6 +3,7 @@ from time import sleep
 import pygame
 from settings import Settings
 from game_stats import GameStats
+from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
@@ -24,8 +25,9 @@ class AlienInvasion:
         pygame.display.set_caption("Alien Invasion")
         
         #Create an instance to store game statistics.
+        # And create a scoreboard
         self.stats = GameStats(self)
-        
+        self.sb = Scoreboard(self)
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
@@ -34,6 +36,10 @@ class AlienInvasion:
 
         # Make the button a play button 
         self.play_button = Button(self, "Play")
+        self.level_one = Button(self, "Level One")
+        self.level_two = Button(self,"Level Two")
+        self.level_three = Button(self, "Level Three")
+
         
         
     def run_game(self):
@@ -73,6 +79,9 @@ class AlienInvasion:
         """Start a new game when a player clicks play"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.stats.game_active:
+            #reset the game to settings 
+            self.settings.initialize_dynamic_settings()
+
             #reset the game stats
             self.stats.reset_stats()
             self.stats.game_active = True
@@ -157,6 +166,11 @@ class AlienInvasion:
         #Get rid of bullet and the alien that have collided
         collisions = pygame.sprite.groupcollide(
                      self.bullets,self.aliens, True, True)
+
+        if collisions:
+            self.stats.score += self.settings.alien_points
+            self.sb.prep_score
+        
         
         if not self.aliens:
             #Destroy existing bullets and create ne fleet
@@ -267,10 +281,18 @@ class AlienInvasion:
     
         #draw an alien on the surface of the screen
         self.aliens.draw(self.screen)
+
+        # Draw the scores on the screen
+        self.sb.show_score()
             
         # Draw the play button if the game is active
         if not self.stats.game_active:
             self.play_button.draw_button()
+            self.level_one.draw_button()
+            self.level_two.draw_button()
+            self.level_three.draw_button()
+
+        
 
             
         # Make the most recently drawn screen visible.

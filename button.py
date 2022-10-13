@@ -28,6 +28,17 @@ class Button:
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
+        # self.msg_image = self.font.render(msg, True, self.text_colour,
+        #         self.button_colour)
+        # self.msg_image_rect = self.msg_image.get_rect()
+        # self.msg_image_rect.center = self.rect.bottom
+
+    def button_position(self,l1,l2,l3):
+        """Defines the positions of the buttons"""
+        self.l1rect = pygame.Rect(70, 70, self.width,self.height)
+        # self.l2rect = pygame.Rect(60,60, self.width, self.height) 
+
+
     def draw_button(self):
         """Display the button on the screen"""
         self.screen.fill(self.button_colour, self.rect)
