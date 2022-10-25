@@ -36,9 +36,9 @@ class AlienInvasion:
 
         # Make the button a play button 
         self.play_button = Button(self, "Play")
-        self.level_one = Button(self, "Level One")
-        self.level_two = Button(self,"Level Two")
-        self.level_three = Button(self, "Level Three")
+        # self.level_one = Button(self, "Level One")
+        # self.level_two = Button(self,"Level Two")
+        # self.level_three = Button(self, "Level Three")
 
         
         
@@ -52,15 +52,18 @@ class AlienInvasion:
                 self._update_bullets()
                 self._update_aliens()
                 
+                
             self._update_screen()
         
-            
+              
     def _check_events(self):
         """Respond to keypresses and mouse events"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
+                highscore = open("highscore.txt", 'r+')
+                highscore.write(str(self.stats.high_score))
                 sys.exit()
-                
+            
             
             #Moves the ship to the right or left setting the moving flags
             #to true, to enable continous smoth movement
@@ -85,6 +88,10 @@ class AlienInvasion:
             #reset the game stats
             self.stats.reset_stats()
             self.stats.game_active = True
+            self.sb.prep_score()
+            self.sb.prep_level()
+            self.sb.prep_ships()
+            self.sb.save_high_score()
 
             #get rid of any remaining alien and bullets
             self.aliens.empty()
@@ -102,8 +109,8 @@ class AlienInvasion:
         """start the game the 'P' is pressed"""
         self.stats.game_active = True
 
-          
-                
+    
+
     def _check_keydown_events(self, event):
             """respond to keypresses"""
             if event.key == pygame.K_RIGHT:
@@ -168,14 +175,20 @@ class AlienInvasion:
                      self.bullets,self.aliens, True, True)
 
         if collisions:
-            self.stats.score += self.settings.alien_points
-            self.sb.prep_score
+            for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
+            self.sb.check_high_score()
         
         
         if not self.aliens:
             #Destroy existing bullets and create ne fleet
             self.bullets.empty()
             self._create_fleet()
+
+            # Increase level
+            self.stats.level += 1
+            self.sb.prep_level()
                 
     def _update_aliens(self):
         """Update the positions of all aliens if it hits an edge"""
@@ -193,9 +206,11 @@ class AlienInvasion:
     def _ship_hit(self):
         """Respond to ship and alien collision"""
         if self.stats.ships_left > 0:
-            # Derement ships left
+            # Derement ships left and update scoreboard
             self.stats.ships_left -= 1
-            
+            self.sb.prep_ships()
+
+
             # Get rid of any remaining aliens and bullets.
             self.aliens.empty()
             self.bullets.empty()
@@ -288,9 +303,9 @@ class AlienInvasion:
         # Draw the play button if the game is active
         if not self.stats.game_active:
             self.play_button.draw_button()
-            self.level_one.draw_button()
-            self.level_two.draw_button()
-            self.level_three.draw_button()
+            # self.level_one.draw_button()
+            # self.level_two.draw_button()
+            # self.level_three.draw_button()
 
         
 
